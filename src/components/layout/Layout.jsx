@@ -9,7 +9,7 @@ const Layout = () => {
         <div className="flex flex-col min-h-screen bg-primary font-sans text-text">
 
             <Navbar />
-            <main className="flex-grow pt-20"> {/* pt-20 to account for fixed navbar */}
+            <main className="flex-grow">
                 <Outlet />
             </main>
             <Footer />
