@@ -73,21 +73,50 @@ const seed = async () => {
         console.log(`✅ Seeded ${products.length} products`);
 
         // Seed initial store content
-        await StoreContent.create({
-            section: 'story-teaser',
-            title: 'Crafted with Intention',
-            description1: 'Our candles are more than just wax and wick. They are an invitation to slow down, to breathe, and to reconnect with yourself. Each candle is hand-poured in small batches using sustainable soy blend wax and premium, phthalate-free fragrances.',
-            description2: 'Inspired by nature and memory, our scents are designed to transport you to your happy place.',
-            image: 'https://images.unsplash.com/photo-1602523961358-f9f03dd557db?q=80&w=2670&auto=format&fit=crop',
-            link: '/story',
-            linkText: 'Read Our Story'
-        });
-        console.log('✅ Seeded initial store content');
+        const content = [
+            {
+                section: 'hero',
+                title: 'Illuminate Your Senses',
+                subtitle: 'The Art of Slow Living',
+                description1: 'Hand-poured candles crafted to bring specific moods and memories to life.',
+                image: '/uploads/layout/hero_bg.jpg',
+                link: '/shop',
+                linkText: 'Shop Collection'
+            },
+            {
+                section: 'story-teaser',
+                title: 'Crafted with Intention',
+                description1: 'Our candles are more than just wax and wick. They are an invitation to slow down, to breathe, and to reconnect with yourself. Each candle is hand-poured in small batches using sustainable soy blend wax and premium, phthalate-free fragrances.',
+                description2: 'Inspired by nature and memory, our scents are designed to transport you to your happy place.',
+                image: '/uploads/layout/story_teaser.jpg',
+                link: '/story',
+                linkText: 'Read Our Story'
+            },
+            {
+                section: 'story-page-hero',
+                title: 'Our Story',
+                description1: 'Crafting moments of peace in a busy world.',
+                image: '/uploads/layout/story_hero.jpg'
+            },
+            {
+                section: 'story-page-ingredients',
+                title: 'Intentionally Crafted',
+                description1: "We believe that what you bring into your home matters. That's why we use only simple, high-quality ingredients.",
+                description2: 'Our wax is a sustainable soy blend, our wicks are lead-free cotton-core, and our fragrances are free from phthalates and harsh chemicals.',
+                image: '/uploads/layout/story_ingredients.jpg'
+            }
+        ];
+
+        for (const item of content) {
+            await StoreContent.create(item);
+        }
+        console.log(`✅ Seeded ${content.length} store content sections`);
 
         // Seed admin user
         await User.create({
             name: 'Admin',
             email: 'admin@noorvia.com',
+            phone: '1234567890',
             password: 'admin123',
             role: 'admin'
         });

@@ -6,6 +6,7 @@ import { contentAPI } from '../../services/api';
 const StoryTeaser = () => {
     const [content, setContent] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
+    const API_URL = import.meta.env.VITE_API_URL || '';
 
     React.useEffect(() => {
         const fetchContent = async () => {
@@ -21,15 +22,16 @@ const StoryTeaser = () => {
         fetchContent();
     }, []);
 
-    if (loading) return <div className="py-20 bg-secondary/30" />;
+    if (loading) return <section className="py-20 bg-secondary/30 h-[600px]" />;
 
     // Fallback if content fetch fails or not seeded yet
     const displayTitle = content?.title || 'Crafted with Intention';
     const description1 = content?.description1 || 'Our candles are more than just wax and wick. They are an invitation to slow down, to breathe, and to reconnect with yourself. Each candle is hand-poured in small batches using sustainable soy blend wax and premium, phthalate-free fragrances.';
     const description2 = content?.description2 || 'Inspired by nature and memory, our scents are designed to transport you to your happy place.';
-    const image = content?.image || 'https://images.unsplash.com/photo-1602523961358-f9f03dd557db?q=80&w=2670&auto=format&fit=crop';
+    const image = content?.image ? (content.image.startsWith('http') ? content.image : `${API_URL}${content.image}`) : 'https://images.unsplash.com/photo-1602523961358-f9f03dd557db?q=80&w=2670';
     const link = content?.link || '/story';
     const linkText = content?.linkText || 'Read Our Story';
+
     return (
         <section className="py-20 bg-secondary/30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
