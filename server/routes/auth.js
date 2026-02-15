@@ -16,12 +16,12 @@ const generateToken = (user) => {
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, phone, password } = req.body;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ message: 'Email already in use' });
 
-        const user = await User.create({ name, email, password });
+        const user = await User.create({ name, email, phone, password });
         const token = generateToken(user);
 
         res.status(201).json({

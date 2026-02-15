@@ -1,8 +1,18 @@
 import express from 'express';
 import Product from '../models/Product.js';
 import { protect, isAdmin } from '../middleware/auth.js';
+import validateId from '../middleware/validateId.js';
+import upload, { processImage } from '../middleware/upload.js';
 
 const router = express.Router();
+
+// POST /api/products/upload — Upload image (Admin only)
+router.post('/upload', protect, isAdmin, upload.single('image'), processImage, (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No image uploaded' });
+    }
+    res.json({ url: req.file.destinationPath });
+});
 
 // GET /api/products — List all products
 router.get('/', async (req, res) => {
@@ -17,7 +27,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/products/:id — Get single product
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateId, async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
@@ -38,7 +48,7 @@ router.post('/', protect, isAdmin, async (req, res) => {
 });
 
 // PUT /api/products/:id — Update product (Admin only)
-router.put('/:id', protect, isAdmin, async (req, res) => {
+router.put('/:id', protect, isAdmin, validateId, async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
         if (!product) return res.status(404).json({ message: 'Product not found' });
@@ -49,7 +59,7 @@ router.put('/:id', protect, isAdmin, async (req, res) => {
 });
 
 // DELETE /api/products/:id — Delete product (Admin only)
-router.delete('/:id', protect, isAdmin, async (req, res) => {
+router.delete('/:id', protect, isAdmin, validateId, async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });

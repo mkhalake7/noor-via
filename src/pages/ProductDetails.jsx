@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { productAPI } from '../services/api';
 import Button from '../components/ui/Button';
 import { ArrowLeft, Star, Truck, ShieldCheck } from 'lucide-react';
@@ -9,6 +11,11 @@ import { motion } from 'framer-motion';
 const ProductDetails = () => {
     const { id } = useParams();
     const { products } = useProducts();
+    const { addToCart } = useCart();
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
@@ -17,17 +24,26 @@ const ProductDetails = () => {
         const found = products.find(p => (p._id || p.id) == id);
         if (found) {
             setProduct(found);
-        } else {
+        } else if (id && id.length === 24) { // Basic check for MongoDB ObjectId
             productAPI.getById(id).then(setProduct).catch(console.error);
         }
     }, [id, products]);
+
+    const API_URL = import.meta.env.VITE_API_URL || '';
 
     if (!product) {
         return <div className="min-h-[50vh] flex items-center justify-center">Loading...</div>;
     }
 
+    const productImage = product.image?.startsWith('http') ? product.image : `${API_URL}${product.image}`;
+
+
     const handleAddToCart = () => {
-        console.log(`Added ${quantity} of ${product.name} to cart.`);
+        if (!user) {
+            navigate('/login', { state: { from: location } });
+            return;
+        }
+        addToCart(product._id || product.id, quantity);
     };
 
     return (
@@ -46,7 +62,7 @@ const ProductDetails = () => {
                         className="aspect-square bg-stone-100 overflow-hidden"
                     >
                         <img
-                            src={product.image}
+                            src={productImage}
                             alt={product.name}
                             className="w-full h-full object-cover"
                         />

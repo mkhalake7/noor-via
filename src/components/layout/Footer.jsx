@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Twitter } from 'lucide-react';
+import logo from '../../assets/logo.png';
 
 const Footer = () => {
     return (
@@ -9,7 +10,11 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     {/* Brand */}
                     <div className="space-y-4">
-                        <h3 className="font-serif text-2xl tracking-widest text-charcoal font-bold">NOOR-VIA</h3>
+                        <Link to="/" className="inline-block">
+                            <div className="w-32 h-32 overflow-hidden flex items-center justify-center ml-0">
+                                <img src={logo} alt="NoorVia" className="scale-[3.5] object-contain" />
+                            </div>
+                        </Link>
                         <p className="text-text/80 text-sm leading-relaxed">
                             Hand-poured luxury candles made with sustainable soy wax and premium fragrances. bringing everyday magic to your space.
                         </p>

@@ -1,18 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
-import { Trash2 } from 'lucide-react';
-import { useProducts } from '../context/ProductContext';
+import { Trash2, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Cart = () => {
-    const { products } = useProducts();
-    // Mock cart data for UI demonstration
-    const cartItems = products.length > 0 ? [
-        { ...products[0], quantity: 2 },
-        { ...products[2], quantity: 1 }
-    ] : [];
+    const { cart, cartTotal, removeFromCart, updateQuantity, loading } = useCart();
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL || '';
 
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const cartItems = cart?.items || [];
+    const subtotal = cartTotal;
+
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center">Loading cart...</div>;
+    }
 
     return (
         <div className="bg-primary min-h-screen py-16">
@@ -27,24 +30,41 @@ const Cart = () => {
                             {cartItems.map((item) => (
                                 <div key={item._id || item.id} className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 border-b border-stone-200 pb-6">
                                     <div className="w-full sm:w-24 h-32 bg-stone-100 flex-shrink-0">
-                                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                        <img
+                                            src={item.product.image.startsWith('http') ? item.product.image : `${API_URL}${item.product.image}`}
+                                            alt={item.product.name}
+                                            className="w-full h-full object-cover"
+                                        />
                                     </div>
 
                                     <div className="flex-grow w-full">
                                         <div className="flex justify-between items-start mb-2">
-                                            <Link to={`/product/${item._id || item.id}`} className="font-serif text-xl text-charcoal hover:text-accent transition-colors">{item.name}</Link>
-                                            <button className="text-text/40 hover:text-red-500 transition-colors">
+                                            <Link to={`/product/${item.product._id || item.product.id}`} className="font-serif text-xl text-charcoal hover:text-accent transition-colors">{item.product.name}</Link>
+                                            <button
+                                                onClick={() => removeFromCart(item.product._id || item.product.id)}
+                                                className="text-text/40 hover:text-red-500 transition-colors"
+                                            >
                                                 <Trash2 size={18} />
                                             </button>
                                         </div>
-                                        <p className="text-sm text-text/60 uppercase tracking-widest mb-4">{item.category}</p>
+                                        <p className="text-sm text-text/60 uppercase tracking-widest mb-4">{item.product.category}</p>
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center border border-charcoal/20 px-2 py-1">
-                                                <button className="px-2 text-text/60 hover:text-charcoal">-</button>
+                                                <button
+                                                    onClick={() => updateQuantity(item.product._id || item.product.id, item.quantity - 1)}
+                                                    className="px-2 text-text/60 hover:text-charcoal"
+                                                >
+                                                    -
+                                                </button>
                                                 <span className="px-2 text-sm text-charcoal">{item.quantity}</span>
-                                                <button className="px-2 text-text/60 hover:text-charcoal">+</button>
+                                                <button
+                                                    onClick={() => updateQuantity(item.product._id || item.product.id, item.quantity + 1)}
+                                                    className="px-2 text-text/60 hover:text-charcoal"
+                                                >
+                                                    +
+                                                </button>
                                             </div>
-                                            <p className="font-medium text-text">₹{(item.price * item.quantity).toFixed(2)}</p>
+                                            <p className="font-medium text-text">₹{(item.product.price * item.quantity).toFixed(2)}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -74,7 +94,18 @@ const Cart = () => {
                                     </div>
                                 </div>
 
-                                <Button className="w-full">Proceed to Checkout</Button>
+                                <Button
+                                    className="w-full"
+                                    onClick={() => {
+                                        if (user) {
+                                            navigate('/checkout');
+                                        } else {
+                                            navigate('/login', { state: { from: { pathname: '/checkout' } } });
+                                        }
+                                    }}
+                                >
+                                    Proceed to Checkout
+                                </Button>
                                 <div className="mt-4 text-center">
                                     <Link to="/shop" className="text-xs text-text/60 underline hover:text-charcoal">Continue Shopping</Link>
                                 </div>

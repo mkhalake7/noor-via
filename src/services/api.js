@@ -36,6 +36,54 @@ export const productAPI = {
         body: JSON.stringify(product),
     }),
     delete: (id) => apiFetch(`/products/${id}`, { method: 'DELETE' }),
+    uploadImage: (formData) => {
+        const token = localStorage.getItem('token');
+        return fetch(`${API_URL}/products/upload`, {
+            method: 'POST',
+            headers: {
+                ...(token && { Authorization: `Bearer ${token}` }),
+                // Content-Type is intentionally omitted for FormData
+            },
+            body: formData,
+        }).then(res => {
+            if (!res.ok) throw new Error('Upload failed');
+            return res.json();
+        });
+    },
+};
+
+// Cart API
+export const cartAPI = {
+    get: () => apiFetch('/cart'),
+    addItem: (productId, quantity) => apiFetch('/cart', {
+        method: 'POST',
+        body: JSON.stringify({ productId, quantity })
+    }),
+    updateItem: (productId, quantity) => apiFetch(`/cart/item/${productId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ quantity })
+    }),
+    deleteItem: (productId) => apiFetch(`/cart/item/${productId}`, {
+        method: 'DELETE'
+    }),
+    clear: () => apiFetch('/cart', {
+        method: 'DELETE'
+    }),
+};
+
+// Order API
+export const orderAPI = {
+    create: (orderData) => apiFetch('/orders', {
+        method: 'POST',
+        body: JSON.stringify(orderData)
+    }),
+    getMine: () => apiFetch('/orders/myorders'),
+    getById: (id) => apiFetch(`/orders/${id}`),
+    getAll: () => apiFetch('/orders'),
+    updateStatus: (id, status) => apiFetch(`/orders/${id}/status`, {
+        method: 'PUT',
+        body: JSON.stringify({ status })
+    }),
 };
 
 // Auth API
@@ -44,9 +92,19 @@ export const authAPI = {
         method: 'POST',
         body: JSON.stringify({ email, password }),
     }),
-    register: (name, email, password) => apiFetch('/auth/register', {
+    register: (name, email, phone, password) => apiFetch('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, phone, password }),
     }),
     getMe: () => apiFetch('/auth/me'),
+};
+
+// Site Content API
+export const contentAPI = {
+    getAll: () => apiFetch('/content'),
+    getBySection: (section) => apiFetch(`/content/${section}`),
+    updateSection: (section, data) => apiFetch(`/content/${section}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+    })
 };

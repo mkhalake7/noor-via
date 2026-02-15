@@ -6,7 +6,8 @@ const productSchema = new mongoose.Schema({
     category: { type: String, required: true, enum: ['Signature', 'Fresh', 'Floral', 'Woody'] },
     image: { type: String, required: true },
     description: { type: String, required: true },
-    scent: { type: String, required: true }
+    scent: { type: String, required: true },
+    isFeatured: { type: Boolean, default: false }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

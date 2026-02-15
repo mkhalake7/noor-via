@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Product from './models/Product.js';
 import User from './models/User.js';
+import StoreContent from './models/StoreContent.js';
 
 dotenv.config();
 
@@ -64,11 +65,24 @@ const seed = async () => {
         // Clear existing data
         await Product.deleteMany({});
         await User.deleteMany({});
+        await StoreContent.deleteMany({});
         console.log('Cleared existing data');
 
         // Seed products
         await Product.insertMany(products);
         console.log(`✅ Seeded ${products.length} products`);
+
+        // Seed initial store content
+        await StoreContent.create({
+            section: 'story-teaser',
+            title: 'Crafted with Intention',
+            description1: 'Our candles are more than just wax and wick. They are an invitation to slow down, to breathe, and to reconnect with yourself. Each candle is hand-poured in small batches using sustainable soy blend wax and premium, phthalate-free fragrances.',
+            description2: 'Inspired by nature and memory, our scents are designed to transport you to your happy place.',
+            image: 'https://images.unsplash.com/photo-1602523961358-f9f03dd557db?q=80&w=2670&auto=format&fit=crop',
+            link: '/story',
+            linkText: 'Read Our Story'
+        });
+        console.log('✅ Seeded initial store content');
 
         // Seed admin user
         await User.create({
