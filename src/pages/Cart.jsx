@@ -2,14 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import { Trash2 } from 'lucide-react';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 
 const Cart = () => {
+    const { products } = useProducts();
     // Mock cart data for UI demonstration
-    const cartItems = [
+    const cartItems = products.length > 0 ? [
         { ...products[0], quantity: 2 },
         { ...products[2], quantity: 1 }
-    ];
+    ] : [];
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -24,14 +25,14 @@ const Cart = () => {
                         {/* Cart Items */}
                         <div className="flex-grow space-y-8">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 border-b border-stone-200 pb-6">
+                                <div key={item._id || item.id} className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 border-b border-stone-200 pb-6">
                                     <div className="w-full sm:w-24 h-32 bg-stone-100 flex-shrink-0">
                                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                     </div>
 
                                     <div className="flex-grow w-full">
                                         <div className="flex justify-between items-start mb-2">
-                                            <Link to={`/product/${item.id}`} className="font-serif text-xl text-charcoal hover:text-accent transition-colors">{item.name}</Link>
+                                            <Link to={`/product/${item._id || item.id}`} className="font-serif text-xl text-charcoal hover:text-accent transition-colors">{item.name}</Link>
                                             <button className="text-text/40 hover:text-red-500 transition-colors">
                                                 <Trash2 size={18} />
                                             </button>

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Upload, X, ImagePlus } from 'lucide-react';
 
 const AdminDashboard = () => {
-    const { products, addProduct, deleteProduct } = useProducts();
+    const { products, addProduct, updateProduct, deleteProduct } = useProducts();
     const { logout } = useAuth();
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -19,6 +19,7 @@ const AdminDashboard = () => {
         description: '',
         scent: ''
     });
+    const [editingId, setEditingId] = useState(null);
     const [imagePreview, setImagePreview] = useState('');
     const [useUrl, setUseUrl] = useState(false);
 
@@ -36,13 +37,11 @@ const AdminDashboard = () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Validate file type
         if (!file.type.startsWith('image/')) {
             alert('Please upload an image file (JPG, PNG, WebP, etc.)');
             return;
         }
 
-        // Validate file size (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             alert('Image must be smaller than 2MB');
             return;
@@ -62,16 +61,22 @@ const AdminDashboard = () => {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!newProduct.image) {
-            alert('Please upload an image or provide an image URL.');
-            return;
-        }
-        addProduct({
-            ...newProduct,
-            price: parseFloat(newProduct.price)
+    const handleEdit = (product) => {
+        setEditingId(product._id || product.id);
+        setNewProduct({
+            name: product.name,
+            price: product.price.toString(),
+            category: product.category,
+            image: product.image,
+            description: product.description,
+            scent: product.scent
         });
+        setImagePreview(product.image);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const cancelEdit = () => {
+        setEditingId(null);
         setNewProduct({
             name: '',
             price: '',
@@ -82,9 +87,33 @@ const AdminDashboard = () => {
         });
         setImagePreview('');
         if (fileInputRef.current) fileInputRef.current.value = '';
-        alert('Product added successfully!');
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!newProduct.image) {
+            alert('Please upload an image or provide an image URL.');
+            return;
+        }
+
+        const productData = {
+            ...newProduct,
+            price: parseFloat(newProduct.price)
+        };
+
+        try {
+            if (editingId) {
+                await updateProduct(editingId, productData);
+                alert('Product updated successfully!');
+            } else {
+                await addProduct(productData);
+                alert('Product added successfully!');
+            }
+            cancelEdit();
+        } catch (error) {
+            alert(error.message || 'Failed to save product');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-primary p-8 pt-24">
@@ -95,9 +124,11 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    {/* Add Product Form */}
+                    {/* Add/Edit Product Form */}
                     <div className="lg:col-span-1 bg-white p-6 rounded-lg shadow-sm h-fit">
-                        <h2 className="text-xl font-serif mb-6">Add New Product</h2>
+                        <h2 className="text-xl font-serif mb-6">
+                            {editingId ? 'Edit Product' : 'Add New Product'}
+                        </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label className="block text-sm text-text/60 mb-1">Product Name</label>
@@ -136,7 +167,7 @@ const AdminDashboard = () => {
                                 </select>
                             </div>
 
-                            {/* Image Upload Section */}
+                            {/* Image Section */}
                             <div>
                                 <div className="flex items-center justify-between mb-1">
                                     <label className="block text-sm text-text/60">Product Image</label>
@@ -223,7 +254,22 @@ const AdminDashboard = () => {
                                     required
                                 />
                             </div>
-                            <Button type="submit" className="w-full">Add Product</Button>
+
+                            <div className="flex gap-4">
+                                <Button type="submit" className="flex-grow">
+                                    {editingId ? 'Update Product' : 'Add Product'}
+                                </Button>
+                                {editingId && (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={cancelEdit}
+                                        className="w-fit"
+                                    >
+                                        Cancel
+                                    </Button>
+                                )}
+                            </div>
                         </form>
                     </div>
 
@@ -251,12 +297,20 @@ const AdminDashboard = () => {
                                             <td className="p-4">₹{product.price}</td>
                                             <td className="p-4 text-sm text-text/60">{product.category}</td>
                                             <td className="p-4">
-                                                <button
-                                                    onClick={() => deleteProduct(product._id || product.id)}
-                                                    className="text-red-500 hover:text-red-700 text-sm"
-                                                >
-                                                    Delete
-                                                </button>
+                                                <div className="flex gap-3">
+                                                    <button
+                                                        onClick={() => handleEdit(product)}
+                                                        className="text-accent hover:text-accent/80 text-sm"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => deleteProduct(product._id || product.id)}
+                                                        className="text-red-500 hover:text-red-700 text-sm"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}

@@ -40,10 +40,21 @@ export const ProductProvider = ({ children }) => {
         }
     };
 
+    const updateProduct = async (id, productData) => {
+        try {
+            const updatedProduct = await productAPI.update(id, productData);
+            setProducts(prev => prev.map(p => (p._id || p.id) === id ? updatedProduct : p));
+            return updatedProduct;
+        } catch (error) {
+            console.error('Failed to update product:', error);
+            throw error;
+        }
+    };
+
     const deleteProduct = async (id) => {
         try {
             await productAPI.delete(id);
-            setProducts(prev => prev.filter(p => p._id !== id));
+            setProducts(prev => prev.filter(p => (p._id || p.id) !== id));
         } catch (error) {
             console.error('Failed to delete product:', error);
             throw error;
@@ -51,7 +62,7 @@ export const ProductProvider = ({ children }) => {
     };
 
     return (
-        <ProductContext.Provider value={{ products, loading, addProduct, deleteProduct, fetchProducts }}>
+        <ProductContext.Provider value={{ products, loading, addProduct, updateProduct, deleteProduct, fetchProducts }}>
             {children}
         </ProductContext.Provider>
     );

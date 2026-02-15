@@ -31,6 +31,10 @@ export const productAPI = {
         method: 'POST',
         body: JSON.stringify(product),
     }),
+    update: (id, product) => apiFetch(`/products/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(product),
+    }),
     delete: (id) => apiFetch(`/products/${id}`, { method: 'DELETE' }),
 };
 
