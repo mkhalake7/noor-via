@@ -1,16 +1,70 @@
-# React + Vite
+# Noor-via 🕯️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, full-stack e-commerce application for artisanal candles, built with the MERN stack.
 
-Currently, two official plugins are available:
+## ✨ Features
+- **Frontend**: React 19, Vite, Tailwind CSS v4, Framer Motion
+- **Backend**: Node.js, Express, MongoDB
+- **Authentication**: JWT-based auth with secure password hashing
+- **Admin Dashboard**: manage products, view inventory (protected route)
+- **Currency**: localized pricing in **INR (₹)**
+- **Image Uploads**: Cloudinary integration (ready for setup)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Getting Started
 
-## React Compiler
+### Prerequisites
+- Node.js (v18+)
+- MongoDB (Local or Atlas)
+- Git
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Installation
 
-## Expanding the ESLint configuration
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/mkhalake7/noor-via.git
+   cd noor-via
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. **Install Dependencies**
+   ```bash
+   # Install root/frontend dependencies
+   npm install
+
+   # Install backend dependencies
+   cd server
+   npm install
+   cd ..
+   ```
+
+3. **Configuration**
+   - Create a `.env` file in `server/` based on `server/.env.example`.
+   - See [CONFIGURATION.md](./CONFIGURATION.md) for detailed setup instructions.
+
+4. **Seed Database** (Optional)
+   Populate the database with initial products and creating an admin user:
+   ```bash
+   cd server
+   npm run seed
+   cd ..
+   ```
+
+5. **Run the App**
+   Start both backend and frontend concurrently:
+   ```bash
+   # From the root directory
+   npm run dev
+   # (This starts backend on :5000 and frontend on :5173)
+   ```
+
+## 🔐 Admin Access
+- **URL**: `/admin`
+- **Default Credentials**: `admin@noorvia.com` / `admin123`
+
+## 🛠️ Tech Stack
+- **Frontend**: React, React Router, Lucide Icons
+- **Backend**: Express.js, Mongoose
+- **Database**: MongoDB
+- **Deployment**: Render (Backend) + Vercel (Frontend) ready
+
+## 📄 License
+MIT
