@@ -17,6 +17,7 @@ const Navbar = () => {
         { name: 'Home', path: '/' },
         { name: 'Shop', path: '/shop' },
         { name: 'Our Story', path: '/story' },
+        { name: 'Contact Us', path: '/contact' },
     ];
 
     return (
@@ -79,9 +80,10 @@ const Navbar = () => {
                     <div className="md:hidden flex items-center">
                         <button
                             onClick={toggleMenu}
-                            className="text-text hover:text-accent focus:outline-none"
+                            className="text-white hover:text-stone-300 focus:outline-none p-2"
+                            aria-label="Toggle Menu"
                         >
-                            {isOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
+                            {isOpen ? <X size={28} strokeWidth={1} /> : <Menu size={28} strokeWidth={1} />}
                         </button>
                     </div>
                 </div>

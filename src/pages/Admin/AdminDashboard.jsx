@@ -215,30 +215,38 @@ const AdminDashboard = () => {
     return (
         <div className="min-h-screen bg-primary p-8 pt-24">
             <div className="max-w-6xl mx-auto">
-                <div className="flex justify-between items-center mb-12">
-                    <h1 className="text-3xl font-serif text-charcoal">Admin Dashboard</h1>
-                    <div className="flex gap-4">
-                        <div className="bg-stone-100 p-1 rounded-lg flex mr-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-stone-200 pb-8">
+                    <div>
+                        <h1 className="text-3xl font-serif text-charcoal">Atelier Management</h1>
+                        <p className="text-sm text-text/60 mt-1">Refine your store's essence and inventory</p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-4">
+                        <div className="bg-stone-100/50 p-1.5 rounded-xl flex">
                             <button
                                 onClick={() => setActiveTab('products')}
-                                className={`px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'products' ? 'bg-white shadow-sm text-charcoal' : 'text-text/60 hover:text-charcoal'}`}
+                                className={`px-6 py-2.5 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${activeTab === 'products' ? 'bg-white shadow-sm text-charcoal' : 'text-text/50 hover:text-charcoal'}`}
                             >
-                                Products
+                                Inventory
                             </button>
                             <button
                                 onClick={() => setActiveTab('orders')}
-                                className={`px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'orders' ? 'bg-white shadow-sm text-charcoal' : 'text-text/60 hover:text-charcoal'}`}
+                                className={`px-6 py-2.5 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${activeTab === 'orders' ? 'bg-white shadow-sm text-charcoal' : 'text-text/50 hover:text-charcoal'}`}
                             >
                                 Orders
                             </button>
                             <button
                                 onClick={() => setActiveTab('content')}
-                                className={`px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'content' ? 'bg-white shadow-sm text-charcoal' : 'text-text/60 hover:text-charcoal'}`}
+                                className={`px-6 py-2.5 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${activeTab === 'content' ? 'bg-white shadow-sm text-charcoal' : 'text-text/50 hover:text-charcoal'}`}
                             >
-                                Site Content
+                                Content
                             </button>
                         </div>
-                        <Button onClick={handleLogout} variant="outline">Logout</Button>
+                        <button
+                            onClick={handleLogout}
+                            className="px-6 py-2.5 border border-charcoal/20 rounded-lg text-xs uppercase tracking-widest font-medium hover:bg-charcoal hover:text-white transition-all"
+                        >
+                            Log Out
+                        </button>
                     </div>
                 </div>
 

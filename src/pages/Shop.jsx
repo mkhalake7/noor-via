@@ -16,7 +16,7 @@ const Shop = () => {
     return (
         <div className="bg-primary min-h-screen pb-20">
             {/* Header */}
-            <div className="bg-secondary/30 py-16 mb-12">
+            <div className="bg-secondary/20 pt-32 pb-12 mb-8">
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <h1 className="font-serif text-4xl md:text-5xl text-charcoal mb-4">Shop Candles</h1>
                     <p className="text-text/60 italic max-w-xl mx-auto">

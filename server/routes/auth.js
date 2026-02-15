@@ -1,8 +1,22 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import rateLimit from 'express-rate-limit';
 import User from '../models/User.js';
 
 const router = express.Router();
+
+// Rate limiting for auth routes
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // Limit each IP to 20 requests per window
+    message: { message: 'Too many attempts, please try again after 15 minutes' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Apply limiter to auth routes
+router.use('/login', authLimiter);
+router.use('/register', authLimiter);
 
 // Generate JWT
 const generateToken = (user) => {

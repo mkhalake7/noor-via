@@ -54,7 +54,14 @@ const Hero = () => {
                     <span className="block text-sm md:text-base tracking-[0.3em] font-light mb-4 uppercase">
                         {subtitle}
                     </span>
-                    <h1 className="font-serif text-4xl md:text-7xl lg:text-8xl mb-6 leading-tight" dangerouslySetInnerHTML={{ __html: title.replace('Senses', '<span class="italic">Senses</span>') }}>
+                    <h1 className="font-serif text-4xl md:text-7xl lg:text-8xl mb-6 leading-tight">
+                        {title.includes('Senses') ? (
+                            <>
+                                {title.split('Senses')[0]}
+                                <span className="italic">Senses</span>
+                                {title.split('Senses')[1]}
+                            </>
+                        ) : title}
                     </h1>
                     <p className="text-lg md:text-xl font-light mb-10 max-w-2xl mx-auto text-white/90">
                         {description}
