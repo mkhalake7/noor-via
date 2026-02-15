@@ -22,24 +22,24 @@ const Navbar = () => {
     return (
         <nav className="relative w-full z-50 bg-primary border-b border-stone-100 transition-all duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-24">
+                <div className="flex justify-between items-center h-[84px]">
                     {/* Logo */}
                     <div className="flex-shrink-0 flex items-center">
                         <Link to="/" className="flex items-center">
-                            <div className="w-64 h-20 overflow-hidden flex items-center justify-center">
-                                <img src={logo} alt="NoorVia" className="h-10 w-auto scale-[4.5] object-contain" />
+                            <div className="w-56 h-16 overflow-hidden flex items-center justify-center">
+                                <img src={logo} alt="NoorVia" className="h-10 w-auto scale-[4.0] object-contain" />
                             </div>
                         </Link>
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-10 items-center">
+                    <div className="hidden md:flex space-x-8 items-center">
                         {navLinks.map((link) => (
                             <NavLink
                                 key={link.name}
                                 to={link.path}
                                 className={({ isActive }) =>
-                                    `text-[22px] font-normal font-sans transition-colors duration-300 hover:text-accent opacity-90 hover:opacity-100 px-4 ${isActive ? 'text-accent' : 'text-text'
+                                    `text-[18px] font-medium font-sans uppercase tracking-[0.1em] transition-colors duration-300 hover:text-accent opacity-90 hover:opacity-100 px-4 ${isActive ? 'text-accent' : 'text-text'
                                     }`
                                 }
                             >
@@ -49,14 +49,14 @@ const Navbar = () => {
                     </div>
 
                     {/* Icons */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-6">
                         <button className="text-text hover:text-accent transition-colors">
-                            <Search size={28} strokeWidth={1.2} />
+                            <Search size={24} strokeWidth={1.5} />
                         </button>
                         <Link to="/cart" className="text-text hover:text-accent transition-colors relative">
-                            <ShoppingBag size={28} strokeWidth={1.2} />
+                            <ShoppingBag size={24} strokeWidth={1.5} />
                             {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-accent text-white text-[11px] w-5 h-5 rounded-full flex items-center justify-center">
+                                <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                                     {cartCount}
                                 </span>
                             )}
@@ -65,12 +65,12 @@ const Navbar = () => {
                             <div className="flex items-center space-x-4">
                                 <span className="text-sm font-medium text-charcoal">Hi, {user.name.split(' ')[0]}</span>
                                 <button onClick={logout} className="text-text hover:text-accent transition-colors">
-                                    <User size={28} strokeWidth={1.2} className="text-accent" />
+                                    <User size={24} strokeWidth={1.5} className="text-accent" />
                                 </button>
                             </div>
                         ) : (
                             <Link to="/login" className="text-text hover:text-accent transition-colors">
-                                <User size={28} strokeWidth={1.2} />
+                                <User size={24} strokeWidth={1.5} />
                             </Link>
                         )}
                     </div>
