@@ -12,6 +12,7 @@ import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Contact from './pages/Contact';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="shop" element={<Shop />} />
         <Route path="product/:id" element={<ProductDetails />} />
         <Route path="story" element={<Story />} />
+        <Route path="contact" element={<Contact />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="order-success/:id" element={<OrderSuccess />} />
