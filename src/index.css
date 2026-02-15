@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #F5F5F0;
+  --color-secondary: #E8E8E8;
+  --color-accent: #D4AF37;
+  --color-charcoal: #333333;
+  --color-text: #4A4A4A;
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Lato", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-primary text-text font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
+}

@@ -1,0 +1,58 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { productAPI } from '../services/api';
+
+const ProductContext = createContext();
+
+export const useProducts = () => useContext(ProductContext);
+
+export const ProductProvider = ({ children }) => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch products from API
+    const fetchProducts = async () => {
+        try {
+            setLoading(true);
+            const data = await productAPI.getAll();
+            setProducts(data);
+        } catch (error) {
+            console.error('Failed to fetch products:', error);
+            // Fallback to local data if API is unavailable
+            const { products: localProducts } = await import('../data/products');
+            setProducts(localProducts);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const addProduct = async (product) => {
+        try {
+            const newProduct = await productAPI.create(product);
+            setProducts(prev => [newProduct, ...prev]);
+            return newProduct;
+        } catch (error) {
+            console.error('Failed to add product:', error);
+            throw error;
+        }
+    };
+
+    const deleteProduct = async (id) => {
+        try {
+            await productAPI.delete(id);
+            setProducts(prev => prev.filter(p => p._id !== id));
+        } catch (error) {
+            console.error('Failed to delete product:', error);
+            throw error;
+        }
+    };
+
+    return (
+        <ProductContext.Provider value={{ products, loading, addProduct, deleteProduct, fetchProducts }}>
+            {children}
+        </ProductContext.Provider>
+    );
+};
