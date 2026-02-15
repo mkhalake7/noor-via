@@ -20,13 +20,13 @@ const Navbar = () => {
     ];
 
     return (
-        <nav className="relative w-full z-50 bg-primary border-b border-stone-100 transition-all duration-300">
+        <nav className="relative w-full z-50 bg-[#000000] border-b border-[#231F20] transition-all duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-[84px]">
                     {/* Logo */}
                     <div className="flex-shrink-0 flex items-center">
                         <Link to="/" className="flex items-center">
-                            <div className="w-56 h-16 overflow-hidden flex items-center justify-center">
+                            <div className="w-20 h-20 bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-[#231F20] shadow-sm">
                                 <img src={logo} alt="NoorVia" className="h-10 w-auto scale-[4.0] object-contain" />
                             </div>
                         </Link>
@@ -39,7 +39,7 @@ const Navbar = () => {
                                 key={link.name}
                                 to={link.path}
                                 className={({ isActive }) =>
-                                    `text-[18px] font-medium font-sans uppercase tracking-[0.1em] transition-colors duration-300 hover:text-accent opacity-90 hover:opacity-100 px-4 ${isActive ? 'text-accent' : 'text-text'
+                                    `text-[18px] font-medium font-sans uppercase tracking-[0.1em] transition-colors duration-300 hover:text-stone-300 ${isActive ? 'text-white' : 'text-stone-100'
                                     }`
                                 }
                             >
@@ -50,26 +50,26 @@ const Navbar = () => {
 
                     {/* Icons */}
                     <div className="hidden md:flex items-center space-x-6">
-                        <button className="text-text hover:text-accent transition-colors">
+                        <button className="text-white hover:text-stone-300 transition-colors">
                             <Search size={24} strokeWidth={1.5} />
                         </button>
-                        <Link to="/cart" className="text-text hover:text-accent transition-colors relative">
+                        <Link to="/cart" className="text-white hover:text-stone-300 transition-colors relative">
                             <ShoppingBag size={24} strokeWidth={1.5} />
                             {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                                <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                                     {cartCount}
                                 </span>
                             )}
                         </Link>
                         {user ? (
                             <div className="flex items-center space-x-4">
-                                <span className="text-sm font-medium text-charcoal">Hi, {user.name.split(' ')[0]}</span>
-                                <button onClick={logout} className="text-text hover:text-accent transition-colors">
-                                    <User size={24} strokeWidth={1.5} className="text-accent" />
+                                <span className="text-sm font-medium text-stone-200">Hi, {user.name.split(' ')[0]}</span>
+                                <button onClick={logout} className="text-white hover:text-stone-300 transition-colors">
+                                    <User size={24} strokeWidth={1.5} />
                                 </button>
                             </div>
                         ) : (
-                            <Link to="/login" className="text-text hover:text-accent transition-colors">
+                            <Link to="/login" className="text-white hover:text-stone-300 transition-colors">
                                 <User size={24} strokeWidth={1.5} />
                             </Link>
                         )}
@@ -94,7 +94,7 @@ const Navbar = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-primary border-t border-stone-200"
+                        className="md:hidden bg-[#000000] border-t border-[#231F20]"
                     >
                         <div className="px-4 pt-4 pb-6 space-y-4 flex flex-col items-center">
                             {navLinks.map((link) => (
@@ -103,30 +103,30 @@ const Navbar = () => {
                                     to={link.path}
                                     onClick={toggleMenu}
                                     className={({ isActive }) =>
-                                        `text-lg tracking-widest uppercase transition-colors duration-300 ${isActive ? 'text-accent' : 'text-text'
+                                        `text-lg tracking-widest uppercase transition-colors duration-300 ${isActive ? 'text-white' : 'text-stone-300'
                                         }`
                                     }
                                 >
                                     {link.name}
                                 </NavLink>
                             ))}
-                            <div className="flex space-x-6 pt-4 border-t border-stone-200 w-full justify-center">
-                                <Link to="/cart" onClick={toggleMenu} className="flex items-center space-x-2 text-text">
+                            <div className="flex space-x-6 pt-4 border-t border-[#231F20] w-full justify-center">
+                                <Link to="/cart" onClick={toggleMenu} className="flex items-center space-x-2 text-stone-100">
                                     <ShoppingBag size={20} strokeWidth={1.5} />
                                     <span>Cart ({cartCount})</span>
                                 </Link>
                                 {user ? (
                                     <div className="flex flex-col items-center space-y-4">
-                                        <span className="text-sm font-medium">Hi, {user.name}</span>
+                                        <span className="text-sm font-medium text-stone-200">Hi, {user.name}</span>
                                         <button
                                             onClick={() => { logout(); toggleMenu(); }}
-                                            className="text-accent text-sm underline"
+                                            className="text-white text-sm underline"
                                         >
                                             Logout
                                         </button>
                                     </div>
                                 ) : (
-                                    <Link to="/login" onClick={toggleMenu} className="flex items-center space-x-2 text-text">
+                                    <Link to="/login" onClick={toggleMenu} className="flex items-center space-x-2 text-stone-100">
                                         <User size={20} strokeWidth={1.5} />
                                         <span>Login</span>
                                     </Link>
