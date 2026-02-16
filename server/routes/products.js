@@ -17,8 +17,21 @@ router.post('/upload', protect, isAdmin, upload.single('image'), processImage, (
 // GET /api/products — List all products
 router.get('/', async (req, res) => {
     try {
-        const { category } = req.query;
-        const filter = category && category !== 'All' ? { category } : {};
+        const { category, search } = req.query;
+        const filter = {};
+
+        if (category && category !== 'All') {
+            filter.category = category;
+        }
+
+        if (search) {
+            filter.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+                { scent: { $regex: search, $options: 'i' } }
+            ];
+        }
+
         const products = await Product.find(filter).sort({ createdAt: -1 });
         res.json(products);
     } catch (error) {

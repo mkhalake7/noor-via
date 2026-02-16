@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/ui/Button';
@@ -8,8 +8,15 @@ const AdminLogin = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    const { user, loading: authLoading, login } = useAuth();
     const navigate = useNavigate();
+
+    // If already logged in as admin, redirect to dashboard
+    useEffect(() => {
+        if (!authLoading && user && user.role === 'admin') {
+            navigate('/admin/dashboard', { replace: true });
+        }
+    }, [user, authLoading, navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,14 +24,28 @@ const AdminLogin = () => {
         setLoading(true);
 
         try {
-            await login(email, password);
-            navigate('/admin/dashboard');
+            const loggedInUser = await login(email, password);
+            if (loggedInUser.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                setError('Admin access required.');
+            }
         } catch (err) {
             setError(err.message || 'Invalid credentials');
         } finally {
             setLoading(false);
         }
     };
+
+    // Show loading while checking auth state
+    if (authLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    }
+
+    // If already logged in as admin, don't flash the form
+    if (user && user.role === 'admin') {
+        return <div className="min-h-screen flex items-center justify-center">Redirecting to dashboard...</div>;
+    }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-primary">
@@ -65,3 +86,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

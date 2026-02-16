@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 import User from '../models/User.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -82,6 +83,33 @@ router.get('/me', async (req, res) => {
         res.json(user);
     } catch (error) {
         res.status(401).json({ message: 'Invalid token' });
+    }
+});
+
+// PUT /api/auth/profile — Update user profile
+router.put('/profile', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const { name, email, phone, password } = req.body;
+
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (phone) user.phone = phone;
+        if (password) user.password = password;
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
+            role: updatedUser.role
+        });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 });
 

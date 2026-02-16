@@ -13,6 +13,9 @@ import OrderSuccess from './pages/OrderSuccess';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Contact from './pages/Contact';
+import Orders from './pages/Orders';
+import Account from './pages/Account';
+import Wishlist from './pages/Wishlist';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -29,6 +32,30 @@ function App() {
         <Route path="order-success/:id" element={<OrderSuccess />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route
+          path="orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="account"
+          element={
+            <ProtectedRoute>
+              <Account />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Admin Routes */}
         <Route path="admin" element={<AdminLogin />} />

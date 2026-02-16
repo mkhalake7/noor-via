@@ -10,10 +10,10 @@ export const ProductProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     // Fetch products from API
-    const fetchProducts = async () => {
+    const fetchProducts = async (filters = {}) => {
         try {
             setLoading(true);
-            const data = await productAPI.getAll();
+            const data = await productAPI.getAll(filters);
             setProducts(data);
         } catch (error) {
             console.error('Failed to fetch products:', error);

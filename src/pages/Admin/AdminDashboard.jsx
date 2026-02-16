@@ -484,12 +484,13 @@ const AdminDashboard = () => {
                                 <p className="text-text/60">No orders placed yet.</p>
                             </div>
                         ) : (
-                            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
                                 <table className="w-full text-left">
                                     <thead className="bg-stone-50 border-b border-stone-200">
                                         <tr>
                                             <th className="p-4 text-sm font-medium text-text/60">Order ID</th>
                                             <th className="p-4 text-sm font-medium text-text/60">Customer</th>
+                                            <th className="p-4 text-sm font-medium text-text/60">Shipping Address</th>
                                             <th className="p-4 text-sm font-medium text-text/60">Date</th>
                                             <th className="p-4 text-sm font-medium text-text/60">Total</th>
                                             <th className="p-4 text-sm font-medium text-text/60">Status</th>
@@ -501,7 +502,17 @@ const AdminDashboard = () => {
                                                 <td className="p-4 font-mono text-xs text-accent">#{order._id.slice(-8).toUpperCase()}</td>
                                                 <td className="p-4">
                                                     <p className="font-medium">{order.user?.name || 'Guest'}</p>
-                                                    <p className="text-[10px] text-text/40">{order.shippingAddress?.city}</p>
+                                                </td>
+                                                <td className="p-4">
+                                                    {order.shippingAddress ? (
+                                                        <div className="text-sm leading-relaxed">
+                                                            <p className="text-charcoal">{order.shippingAddress.address}</p>
+                                                            <p className="text-text/50">{order.shippingAddress.city}, {order.shippingAddress.postalCode}</p>
+                                                            <p className="text-text/40 text-xs">{order.shippingAddress.country}</p>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-text/30 text-xs italic">No address</span>
+                                                    )}
                                                 </td>
                                                 <td className="p-4 text-sm">{new Date(order.createdAt).toLocaleDateString()}</td>
                                                 <td className="p-4 font-medium">₹{order.totalPrice.toFixed(2)}</td>

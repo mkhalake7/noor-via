@@ -3,9 +3,10 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useWishlist } from '../context/WishlistContext';
 import { productAPI } from '../services/api';
 import Button from '../components/ui/Button';
-import { ArrowLeft, Star, Truck, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Star, Truck, ShieldCheck, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ProductDetails = () => {
@@ -13,11 +14,13 @@ const ProductDetails = () => {
     const { products } = useProducts();
     const { addToCart } = useCart();
     const { user } = useAuth();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const navigate = useNavigate();
     const location = useLocation();
 
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
+    const isWishlisted = product ? isInWishlist(product._id || product.id) : false;
 
     useEffect(() => {
         // Try to find in context first (for speed), then fall back to API
@@ -44,6 +47,23 @@ const ProductDetails = () => {
             return;
         }
         addToCart(product._id || product.id, quantity);
+    };
+
+    const handleWishlist = async () => {
+        if (!user) {
+            navigate('/login', { state: { from: location } });
+            return;
+        }
+
+        try {
+            if (isWishlisted) {
+                await removeFromWishlist(product._id || product.id);
+            } else {
+                await addToWishlist(product._id || product.id);
+            }
+        } catch (err) {
+            console.error('Wishlist action failed:', err);
+        }
     };
 
     return (
@@ -88,32 +108,45 @@ const ProductDetails = () => {
                         </div>
 
                         {/* Quantity & Add to Cart */}
-                        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
-                            <div className="flex items-center border border-charcoal/30 w-32 justify-between px-4 py-3">
-                                <button
-                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                    className="text-text hover:text-accent"
-                                >
-                                    -
-                                </button>
-                                <span className="text-charcoal font-medium">{quantity}</span>
-                                <button
-                                    onClick={() => setQuantity(quantity + 1)}
-                                    className="text-text hover:text-accent"
-                                >
-                                    +
-                                </button>
+                        {(!user || user.role !== 'admin') && (
+                            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+                                <div className="flex items-center border border-charcoal/30 w-32 justify-between px-4 py-3">
+                                    <button
+                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                        className="text-text hover:text-accent"
+                                    >
+                                        -
+                                    </button>
+                                    <span className="text-charcoal font-medium">{quantity}</span>
+                                    <button
+                                        onClick={() => setQuantity(quantity + 1)}
+                                        className="text-text hover:text-accent"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                <Button onClick={handleAddToCart} className="flex-grow">
+                                    Add to Cart
+                                </Button>
                             </div>
-                            <Button onClick={handleAddToCart} className="flex-grow">
-                                Add to Cart
-                            </Button>
-                        </div>
+                        )}
+
+                        {(!user || user.role !== 'admin') && (
+                            <button
+                                onClick={handleWishlist}
+                                className={`flex items-center space-x-2 text-sm uppercase tracking-widest font-medium transition-colors mb-8 ${isWishlisted ? 'text-red-500' : 'text-text/60 hover:text-charcoal'
+                                    }`}
+                            >
+                                <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
+                                <span>{isWishlisted ? 'In Wishlist' : 'Add to Wishlist'}</span>
+                            </button>
+                        )}
 
                         {/* Features */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-text/60 uppercase tracking-widest">
                             <div className="flex items-center space-x-2">
                                 <Truck size={16} />
-                                <span>Free Shipping over $50</span>
+                                <span>Free Shipping over ₹2,500</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <ShieldCheck size={16} />

@@ -25,7 +25,10 @@ const apiFetch = async (endpoint, options = {}) => {
 
 // Product API
 export const productAPI = {
-    getAll: () => apiFetch('/products'),
+    getAll: (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        return apiFetch(`/products${query ? `?${query}` : ''}`);
+    },
     getById: (id) => apiFetch(`/products/${id}`),
     create: (product) => apiFetch('/products', {
         method: 'POST',
@@ -97,6 +100,10 @@ export const authAPI = {
         body: JSON.stringify({ name, email, phone, password }),
     }),
     getMe: () => apiFetch('/auth/me'),
+    updateProfile: (data) => apiFetch('/auth/profile', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    }),
 };
 
 // Site Content API
@@ -106,5 +113,16 @@ export const contentAPI = {
     updateSection: (section, data) => apiFetch(`/content/${section}`, {
         method: 'PUT',
         body: JSON.stringify(data)
+    })
+};
+
+// Wishlist API
+export const wishlistAPI = {
+    get: () => apiFetch('/wishlist'),
+    add: (productId) => apiFetch(`/wishlist/add/${productId}`, {
+        method: 'POST'
+    }),
+    remove: (productId) => apiFetch(`/wishlist/remove/${productId}`, {
+        method: 'DELETE'
     })
 };
